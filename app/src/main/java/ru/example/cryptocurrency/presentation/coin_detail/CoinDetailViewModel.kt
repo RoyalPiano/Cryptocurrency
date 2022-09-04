@@ -1,15 +1,17 @@
 package ru.example.cryptocurrency.presentation.coin_detail
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import ru.example.cryptocurrency.common.Constants
 import ru.example.cryptocurrency.common.Resource
+import ru.example.cryptocurrency.domain.model.CoinDetail
 import ru.example.cryptocurrency.domain.use_case.get_coin.GetCoinUseCase
 import javax.inject.Inject
 
@@ -19,30 +21,38 @@ class CoinDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _state = mutableStateOf(CoinDetailState())
-    val state: State<CoinDetailState> = _state
+    private val _state = MutableStateFlow<Resource<CoinDetail>>(Resource.Loading())
+    val state: StateFlow<Resource<CoinDetail>> = _state
+
+    private val _coin = MutableStateFlow<CoinDetail?>(null)
+    val coin: StateFlow<CoinDetail?> = _coin
+
+    private var getCoinJob: Job? = null
+    private var coinId: String? = savedStateHandle.get<String>(Constants.PARAM_COIN_ID)
 
     init {
-        savedStateHandle.get<String>(Constants.PARAM_COIN_ID)?.let { coinId ->
+        coinId?.let { coinId ->
             getCoin(coinId)
         }
     }
 
+    fun refreshData() {
+        coinId?.let { getCoin(it) }
+    }
+
     private fun getCoin(coinId: String) {
-        getCoinUseCase(coinId).onEach { result ->
-            when (result) {
+        getCoinJob?.cancel()
+        getCoinJob = getCoinUseCase(coinId).onEach { result ->
+            when(result) {
                 is Resource.Success -> {
-                    _state.value = CoinDetailState(coin = result.data)
+                    _coin.emit(result.data)
                 }
                 is Resource.Error -> {
-                    _state.value = CoinDetailState(
-                        error = result.message ?: "An unexpected error occured"
-                    )
+                    _coin.emit(null)
                 }
-                is Resource.Loading -> {
-                    _state.value = CoinDetailState(isLoading = true)
-                }
+                is Resource.Loading -> {}
             }
+            _state.emit(result)
         }.launchIn(viewModelScope)
     }
 }

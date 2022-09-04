@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -26,6 +27,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Preview
 @Composable
 fun ScaffoldCompose() {
     Scaffold(
