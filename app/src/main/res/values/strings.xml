@@ -3,4 +3,8 @@
     <string name="refresh_page_tip">Refresh page</string>
     <string name="io_exception">Couldn\'t reach server. Check your internet connection.</string>
     <string name="unknown_exception">An unexpected error occurred</string>
+    <string name="team_members_title">Team members</string>
+    <string name="tag_title">Tags</string>
+    <string name="active_indicator">active</string>
+    <string name="inactive_indicator">inactive</string>
 </resources>

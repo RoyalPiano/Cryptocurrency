@@ -22,6 +22,7 @@ import ru.example.cryptocurrency.R
 import ru.example.cryptocurrency.common.Resource
 import ru.example.cryptocurrency.presentation.coin_detail.components.CoinTag
 import ru.example.cryptocurrency.presentation.coin_detail.components.TeamListItem
+import ru.example.cryptocurrency.presentation.components.ResourceStateHandler
 
 @Composable
 fun CoinDetailScreen(
@@ -50,7 +51,8 @@ fun CoinDetailScreen(
                                 style = MaterialTheme.typography.h5,
                             )
                             Text(
-                                text = if(coin.is_active) "active" else "inactive",
+                                text = if(coin.is_active) stringResource(R.string.active_indicator)
+                                    else stringResource(R.string.inactive_indicator),
                                 color = if(coin.is_active) Color.Green else Color.Red,
                                 fontStyle = FontStyle.Italic,
                                 textAlign = TextAlign.End,
@@ -65,7 +67,7 @@ fun CoinDetailScreen(
                         )
                         Spacer(modifier = Modifier.height(15.dp))
                         Text(
-                            text = "Tags",
+                            text = stringResource(R.string.tag_title),
                             style = MaterialTheme.typography.h6
                         )
                         Spacer(modifier = Modifier.height(15.dp))
@@ -80,7 +82,7 @@ fun CoinDetailScreen(
                         }
                         Spacer(modifier = Modifier.height(15.dp))
                         Text(
-                            text = "Team members",
+                            text = stringResource(R.string.team_members_title),
                             style = MaterialTheme.typography.h6
                         )
                         Spacer(modifier = Modifier.height(15.dp))
@@ -96,36 +98,7 @@ fun CoinDetailScreen(
                     }
                 }
             }
-            when(state) {
-                is Resource.Error -> {
-                    Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp)
-                            .align(Alignment.Center)
-                    ) {
-                        Text(
-                            text = state.message.asString(),
-                            color = MaterialTheme.colors.error,
-                            textAlign = TextAlign.Center,
-                        )
-                        TextButton(
-                            onClick = {
-                                viewModel.refreshData()
-                            },
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally),
-
-                            ) {
-                            Text(text = stringResource(R.string.refresh_page_tip))
-                        }
-                    }
-                }
-                is Resource.Loading -> {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                }
-                is Resource.Success -> {}
-            }
+            ResourceStateHandler(state, Modifier.align(Alignment.Center)) { viewModel.refreshData() }
         }
     }
 }
