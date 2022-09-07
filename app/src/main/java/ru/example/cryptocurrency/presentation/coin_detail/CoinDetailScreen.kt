@@ -19,17 +19,15 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import ru.example.cryptocurrency.R
-import ru.example.cryptocurrency.common.Resource
 import ru.example.cryptocurrency.presentation.coin_detail.components.CoinTag
 import ru.example.cryptocurrency.presentation.coin_detail.components.TeamListItem
-import ru.example.cryptocurrency.presentation.components.ResourceStateHandler
+import ru.example.cryptocurrency.presentation.components.ScreenStateHandler
 
 @Composable
 fun CoinDetailScreen(
     viewModel: CoinDetailViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.collectAsState().value
-    val coin = viewModel.coin.collectAsState().value
     SwipeRefresh(
         state = rememberSwipeRefreshState(false),
         onRefresh = {
@@ -40,20 +38,20 @@ fun CoinDetailScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(20.dp)
             ) {
-                coin?.let {
+                state.data?.let { coinDetail ->
                     item {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "${coin.rank}. ${coin.name} (${coin.symbol})",
+                                text = "${coinDetail.rank}. ${coinDetail.name} (${coinDetail.symbol})",
                                 style = MaterialTheme.typography.h5,
                             )
                             Text(
-                                text = if(coin.is_active) stringResource(R.string.active_indicator)
+                                text = if(coinDetail.is_active) stringResource(R.string.active_indicator)
                                     else stringResource(R.string.inactive_indicator),
-                                color = if(coin.is_active) Color.Green else Color.Red,
+                                color = if(coinDetail.is_active) Color.Green else Color.Red,
                                 fontStyle = FontStyle.Italic,
                                 textAlign = TextAlign.End,
                                 modifier = Modifier
@@ -62,7 +60,7 @@ fun CoinDetailScreen(
                         }
                         Spacer(modifier = Modifier.height(15.dp))
                         Text(
-                            text = coin.description,
+                            text = coinDetail.description,
                             style = MaterialTheme.typography.body2
                         )
                         Spacer(modifier = Modifier.height(15.dp))
@@ -76,7 +74,7 @@ fun CoinDetailScreen(
                             crossAxisSpacing = 10.dp,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            coin.tags.forEach { tag ->
+                            coinDetail.tags.forEach { tag ->
                                 CoinTag(tag = tag)
                             }
                         }
@@ -87,7 +85,7 @@ fun CoinDetailScreen(
                         )
                         Spacer(modifier = Modifier.height(15.dp))
                     }
-                    items(coin.team) { teamMember ->
+                    items(coinDetail.team) { teamMember ->
                         TeamListItem(
                             teamMember = teamMember,
                             modifier = Modifier
@@ -98,7 +96,7 @@ fun CoinDetailScreen(
                     }
                 }
             }
-            ResourceStateHandler(state, Modifier.align(Alignment.Center)) { viewModel.refreshData() }
+            ScreenStateHandler(state, Modifier.align(Alignment.Center)) { viewModel.refreshData() }
         }
     }
 }

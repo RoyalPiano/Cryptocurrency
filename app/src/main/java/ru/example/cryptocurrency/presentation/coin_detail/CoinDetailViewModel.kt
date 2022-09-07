@@ -5,14 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import ru.example.cryptocurrency.common.Constants
 import ru.example.cryptocurrency.common.Resource
-import ru.example.cryptocurrency.domain.model.CoinDetail
 import ru.example.cryptocurrency.domain.use_case.get_coin.GetCoinUseCase
+import ru.example.cryptocurrency.presentation.coin_list.CoinListState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,11 +18,8 @@ class CoinDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<Resource<CoinDetail>>(Resource.Loading())
-    val state: StateFlow<Resource<CoinDetail>> = _state
-
-    private val _coin = MutableStateFlow<CoinDetail?>(null)
-    val coin: StateFlow<CoinDetail?> = _coin
+    private val _state = MutableStateFlow(CoinDetailState())
+    val state = _state.asStateFlow()
 
     private var getCoinJob: Job? = null
     private var coinId: String? = savedStateHandle.get<String>(Constants.PARAM_COIN_ID)
@@ -45,14 +39,15 @@ class CoinDetailViewModel @Inject constructor(
         getCoinJob = getCoinUseCase(coinId).onEach { result ->
             when(result) {
                 is Resource.Success -> {
-                    _coin.emit(result.data)
+                    _state.emit(CoinDetailState(isLoading = false, data = result.data, errorMessage = null))
                 }
                 is Resource.Error -> {
-                    _coin.emit(null)
+                    _state.emit(CoinDetailState(errorMessage = result.message, isLoading = false, data = null))
                 }
-                is Resource.Loading -> {}
+                is Resource.Loading -> {
+                    _state.update { it.copy(isLoading = true, errorMessage = null)  }
+                }
             }
-            _state.emit(result)
         }.launchIn(viewModelScope)
     }
 }

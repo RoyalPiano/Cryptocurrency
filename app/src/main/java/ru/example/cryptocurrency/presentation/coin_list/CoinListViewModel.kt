@@ -4,12 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import ru.example.cryptocurrency.common.Resource
-import ru.example.cryptocurrency.domain.model.Coin
 import ru.example.cryptocurrency.domain.use_case.get_coins.GetCoinsUseCase
 import javax.inject.Inject
 
@@ -18,11 +14,8 @@ class CoinListViewModel @Inject constructor(
     private val getCoinsUseCase: GetCoinsUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<Resource<List<Coin>>>(Resource.Loading())
-    val state: StateFlow<Resource<List<Coin>>> = _state
-
-    private val _coinList = MutableStateFlow(emptyList<Coin>())
-    val coinList: StateFlow<List<Coin>> = _coinList
+    private val _state = MutableStateFlow(CoinListState())
+    val state = _state.asStateFlow()
 
     private var getCoinsJob: Job? = null
 
@@ -39,14 +32,15 @@ class CoinListViewModel @Inject constructor(
         getCoinsJob = getCoinsUseCase().onEach { result ->
             when(result) {
                 is Resource.Success -> {
-                    _coinList.emit(result.data)
+                    _state.emit(CoinListState(data = result.data, isLoading = false, errorMessage = null))
                 }
                 is Resource.Error -> {
-                    _coinList.emit(emptyList())
+                    _state.emit(CoinListState(errorMessage = result.message, isLoading = false, data = emptyList()))
                 }
-                is Resource.Loading -> {}
+                is Resource.Loading -> {
+                    _state.update { it.copy(isLoading = true, errorMessage = null) }
+                }
             }
-            _state.emit(result)
         }.launchIn(viewModelScope)
     }
 }
