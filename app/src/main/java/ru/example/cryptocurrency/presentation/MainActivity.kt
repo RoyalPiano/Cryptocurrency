@@ -1,4 +1,4 @@
-package ru.example.cryptocurrency
+package ru.example.cryptocurrency.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -6,13 +6,14 @@ import androidx.activity.compose.setContent
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import ru.example.cryptocurrency.R
 import ru.example.cryptocurrency.common.Constants
-import ru.example.cryptocurrency.presentation.Screen
 import ru.example.cryptocurrency.presentation.coin_detail.CoinDetailScreen
 import ru.example.cryptocurrency.presentation.coin_list.CoinListScreen
 import ru.example.cryptocurrency.presentation.theme.CryptocurrencyTheme
@@ -21,13 +22,13 @@ import ru.example.cryptocurrency.presentation.theme.CryptocurrencyTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         setContent {
             ScaffoldCompose()
         }
     }
 }
 
-@Preview
 @Composable
 fun ScaffoldCompose() {
     Scaffold(
@@ -59,7 +60,7 @@ fun ScaffoldCompose() {
 @Composable
 fun TopAppBarCompose() {
     TopAppBar(
-        title = { Text(text = "Crypto", color = Color.White)},
+        title = { Text(text = stringResource(R.string.app_bar_titie), color = Color.White)},
         backgroundColor = Color.DarkGray,
     )
 }

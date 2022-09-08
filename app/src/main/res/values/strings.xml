@@ -7,4 +7,5 @@
     <string name="tag_title">Tags</string>
     <string name="active_indicator">active</string>
     <string name="inactive_indicator">inactive</string>
+    <string name="app_bar_titie">Crypto</string>
 </resources>

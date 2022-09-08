@@ -89,6 +89,9 @@ dependencies {
     testAnnotationProcessor 'com.google.dagger:hilt-compiler:2.43.2'
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
+    //SplashScreen
+    implementation 'androidx.core:core-splashscreen:1.0.0'
+
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
