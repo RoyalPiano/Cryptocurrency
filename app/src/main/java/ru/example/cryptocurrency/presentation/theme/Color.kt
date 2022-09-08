@@ -1,9 +1,8 @@
 package ru.example.cryptocurrency.presentation.theme
 
 import androidx.compose.ui.graphics.Color
-import ru.example.cryptocurrency.R
 
-val DarkGray = Color(R.color.dark_gray)
-val MediumGray = Color(R.color.medium_gray)
-val ColorPrimary = Color(R.color.primary)
-val TextWhite = Color(R.color.white)
+val DarkGray = Color(0xFF202020)
+val MediumGray = Color(0xFF505050)
+val ColorPrimary = Color(0xFF08FF04)
+val TextWhite = Color(0xFFEEEEEE)
