@@ -11,11 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
+import ru.example.cryptocurrency.R
 import ru.example.cryptocurrency.domain.model.Coin
+import ru.example.cryptocurrency.presentation.theme.spacing
 
 @Composable
 fun CoinListItem(
@@ -26,7 +28,7 @@ fun CoinListItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onItemClick(coin) }
-            .padding(20.dp),
+            .padding(MaterialTheme.spacing.medium),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
@@ -35,7 +37,10 @@ fun CoinListItem(
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            text = if(coin.is_active) "active" else "inactive",
+            text = if(coin.is_active)
+                stringResource(R.string.active_indicator)
+            else
+                stringResource(R.string.inactive_indicator),
             color = if(coin.is_active) Color.Green else Color.Red,
             fontStyle = FontStyle.Italic,
             textAlign = TextAlign.End,
