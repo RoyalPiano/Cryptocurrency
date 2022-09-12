@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.*
 import ru.example.cryptocurrency.common.Constants
 import ru.example.cryptocurrency.common.Resource
 import ru.example.cryptocurrency.domain.use_case.get_coin.GetCoinUseCase
-import ru.example.cryptocurrency.presentation.coin_list.CoinListState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,7 +21,7 @@ class CoinDetailViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     private var getCoinJob: Job? = null
-    private var coinId: String? = savedStateHandle.get<String>(Constants.PARAM_COIN_ID)
+    private val coinId: String? = savedStateHandle.get<String>(Constants.PARAM_COIN_ID)
 
     init {
         coinId?.let { coinId ->
