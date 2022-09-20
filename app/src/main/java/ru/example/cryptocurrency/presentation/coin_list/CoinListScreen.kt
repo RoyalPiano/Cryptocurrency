@@ -1,10 +1,8 @@
 package ru.example.cryptocurrency.presentation.coin_list
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
@@ -27,7 +25,7 @@ fun CoinListScreen(
         onRefresh = {
             viewModel.refreshData()
         }) {
-        Box(modifier = Modifier.background(MaterialTheme.colors.background)) {
+        Box() {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(state.data) { coin ->
                     CoinListItem(

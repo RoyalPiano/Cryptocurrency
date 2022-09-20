@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -20,6 +19,7 @@ import ru.example.cryptocurrency.presentation.coin_detail.CoinDetailScreen
 import ru.example.cryptocurrency.presentation.coin_list.CoinListScreen
 import ru.example.cryptocurrency.presentation.theme.CryptocurrencyTheme
 import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import ru.example.cryptocurrency.presentation.theme.DarkGray
@@ -27,10 +27,15 @@ import ru.example.cryptocurrency.presentation.theme.DarkGray
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         installSplashScreen()
+        super.onCreate(savedInstanceState)
         setContent {
-            ScaffoldCompose()
+            CryptocurrencyTheme {
+                val systemUiController = rememberSystemUiController()
+                systemUiController.setSystemBarsColor(color = MaterialTheme.colors.background)
+
+                ScaffoldCompose()
+            }
         }
     }
 }
@@ -40,25 +45,22 @@ fun ScaffoldCompose() {
     Scaffold(
         topBar = { TopAppBarCompose() }
     ) {
-        CryptocurrencyTheme {
-            val systemUiController = rememberSystemUiController()
-            systemUiController.setSystemBarsColor(color = MaterialTheme.colors.background)
-            Box(Modifier.background(MaterialTheme.colors.background)) {
-                val navController = rememberNavController()
-                NavHost(
-                    navController = navController,
-                    startDestination = Screen.CoinListScreen.route
+
+        Box(Modifier.background(MaterialTheme.colors.background)) {
+            val navController = rememberNavController()
+            NavHost(
+                navController = navController,
+                startDestination = Screen.CoinListScreen.route
+            ) {
+                composable(
+                    route = Screen.CoinListScreen.route
                 ) {
-                    composable(
-                        route = Screen.CoinListScreen.route
-                    ) {
-                        CoinListScreen(navController)
-                    }
-                    composable(
-                        route = "${Screen.CoinDetailScreen.route}/{${Constants.PARAM_COIN_ID}}",
-                    ) {
-                        CoinDetailScreen()
-                    }
+                    CoinListScreen(navController)
+                }
+                composable(
+                    route = "${Screen.CoinDetailScreen.route}/{${Constants.PARAM_COIN_ID}}",
+                ) {
+                    CoinDetailScreen()
                 }
             }
         }

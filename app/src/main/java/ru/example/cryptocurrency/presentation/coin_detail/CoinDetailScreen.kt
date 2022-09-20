@@ -34,7 +34,7 @@ fun CoinDetailScreen(
         onRefresh = {
             viewModel.refreshData()
         }) {
-        Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)) {
+        Box(modifier = Modifier.fillMaxSize()) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(MaterialTheme.spacing.medium)
