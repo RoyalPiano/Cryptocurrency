@@ -1,5 +1,6 @@
 package ru.example.cryptocurrency.presentation.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
@@ -17,13 +18,13 @@ private val DarkColorPalette = darkColors(
 
 private val LightColorPalette = lightColors(
     primary = ColorPrimary,
-    background = Color.White,
-    onBackground = MediumGray,
+    background = DarkGray,
+    onBackground = TextWhite,
     onPrimary = DarkGray
 )
 
 @Composable
-fun CryptocurrencyTheme(darkTheme: Boolean = true, content: @Composable() () -> Unit) {
+fun CryptocurrencyTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {

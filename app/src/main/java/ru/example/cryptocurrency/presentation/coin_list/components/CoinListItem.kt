@@ -34,7 +34,8 @@ fun CoinListItem(
         Text(
             text = "${coin.rank}. ${coin.name} (${coin.symbol})",
             style = MaterialTheme.typography.body1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            color = MaterialTheme.colors.onBackground
         )
         Text(
             text = if(coin.is_active)

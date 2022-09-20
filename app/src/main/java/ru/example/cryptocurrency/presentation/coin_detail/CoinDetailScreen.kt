@@ -1,5 +1,6 @@
 package ru.example.cryptocurrency.presentation.coin_detail
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -33,7 +34,7 @@ fun CoinDetailScreen(
         onRefresh = {
             viewModel.refreshData()
         }) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.background)) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(MaterialTheme.spacing.medium)
@@ -47,6 +48,7 @@ fun CoinDetailScreen(
                             Text(
                                 text = "${coinDetail.rank}. ${coinDetail.name} (${coinDetail.symbol})",
                                 style = MaterialTheme.typography.h5,
+                                color = MaterialTheme.colors.onBackground
                             )
                             Text(
                                 text = if(coinDetail.is_active)
@@ -63,12 +65,15 @@ fun CoinDetailScreen(
                         Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
                         Text(
                             text = coinDetail.description,
-                            style = MaterialTheme.typography.body2
+                            style = MaterialTheme.typography.body2,
+                            color = MaterialTheme.colors.onBackground
+
                         )
                         Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
                         Text(
                             text = stringResource(R.string.tag_title),
-                            style = MaterialTheme.typography.h6
+                            style = MaterialTheme.typography.h6,
+                            color = MaterialTheme.colors.onBackground
                         )
                         Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
                         FlowRow(
@@ -83,7 +88,8 @@ fun CoinDetailScreen(
                         Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
                         Text(
                             text = stringResource(R.string.team_members_title),
-                            style = MaterialTheme.typography.h6
+                            style = MaterialTheme.typography.h6,
+                            color = MaterialTheme.colors.onBackground
                         )
                         Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
                     }
